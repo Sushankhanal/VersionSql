@@ -1,0 +1,28 @@
+name: Deploy to SQL Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up SQL Server Tools
+        uses: microsoft/mssql-scripter@v2
+
+      - name: Execute SQL Scripts
+        run: |
+          cd VersionSQL/DESKTOP-47EGGQ6/MSSQLSERVER01/trial_db/dbo
+
+          for file in *.sql
+          do
+            sqlcmd -S DESKTOP-47EGGQ6 -U sushan -P susan123 -d target_db -i $file
+          done
+        env:
+          SQLCMDPASSWORD: susan123
